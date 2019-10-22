@@ -11,7 +11,7 @@ import os,sys
 import tumbletiles as TT
 
 def getFile():
-    return tkFileDialog.askopenfilename()
+    return filedialog.askopenfilename()
 
 #parse file will get the data from a file and now return both a board object and a preview tile object
 def parseFile(filename):

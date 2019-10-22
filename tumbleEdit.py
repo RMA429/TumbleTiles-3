@@ -14,7 +14,9 @@ import time
 import os,sys
 import math
 from tkinter.colorchooser import askcolor  
+import logging
 import boto3
+from botocore.exceptions import ClientError
 
 #the x and y coordinate that the preview tiles will begin to be drawn on
 
@@ -1532,7 +1534,7 @@ Shift + Right-Click:
 		self.tumbleGUI.setTilesFromEditor(self.board, self.glue_data, self.prevTileList, self.board.Cols, self.board.Rows)
 
 	def saveTileConfig(self):
-		filename = tkFileDialog.asksaveasfilename()
+		filename = filedialog.asksaveasfilename()
 		tile_config = ET.Element("TileConfiguration")
 		board_size = ET.SubElement(tile_config, "BoardSize")
 		glue_func = ET.SubElement(tile_config, "GlueFunction")
@@ -1670,12 +1672,12 @@ Shift + Right-Click:
 		#print tile_config
 		mydata = ET.tostring(tile_config)
 		file = open(filename+".xml", "w")
-		file.write(mydata)
+		file.write(str(mydata))
 
 	def CloudSave(self):
 		s3_client = boto3.client('s3')
 
-		filename = tkFileDialog.asksaveasfilename()
+		filename = filedialog.asksaveasfilename()
 		tile_config = ET.Element("TileConfiguration")
 		board_size = ET.SubElement(tile_config, "BoardSize")
 		glue_func = ET.SubElement(tile_config, "GlueFunction")
@@ -1813,7 +1815,15 @@ Shift + Right-Click:
 		#print tile_config
 		mydata = ET.tostring(tile_config)
 		file = open(filename+".xml", "w")
-		response = s3_client.upload_file(filename, supercoolbucket, filename+".xml")
+		
+		try:
+			response = s3_client.upload_file(filename, "supercoolbucket", filename+".xml")
+		except ClientError as e:
+			logging.error(e)
+			return False
+		return True
+
+
 
 		file.write(mydata)
 
