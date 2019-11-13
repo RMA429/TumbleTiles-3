@@ -22,7 +22,7 @@ Section 1 - Application
 
 ## 1.1 Requirements
   Required:
-    -Python 2.7.+
+    -Python 3.6+
     -Tkinter (installs with python usually)
   Optional:
     -pyscreenshot (install using pip)
